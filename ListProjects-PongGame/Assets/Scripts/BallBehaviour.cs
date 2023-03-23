@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class BallBehaviour : MonoBehaviour
 {
-    public float speed = 30; 
-    // Start is called before the first frame update
+    [SerializeField] GameManager gm;
+    public AudioClip pongSound;
+    private AudioSource audioSource;
+    public float speed = 30;
     void Start()
     {
-        GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;  
+        audioSource = GetComponent<AudioSource>();
+        if (gm.Started)
+        {
+            GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;
+        }
     }
 
     private float hitFactor(Vector2 ballPos, Vector2 racketPos, float racketHeight)
@@ -23,13 +29,25 @@ public class BallBehaviour : MonoBehaviour
             float y = hitFactor(transform.position, collision.transform.position, collision.collider.bounds.size.y);
             Vector2 dir = new Vector2(-1, y).normalized;
             GetComponent<Rigidbody2D>().velocity = dir * speed;
+            audioSource.PlayOneShot(pongSound);
         }
 
-        if(collision.gameObject.name == "RightRocket")
+        if(collision.gameObject.name == "RightRacket")
         {
             float y = hitFactor(transform.position, collision.transform.position, collision.collider.bounds.size.y);
             Vector2 dir = new Vector2(1, y).normalized;
             GetComponent<Rigidbody2D>().velocity = dir * speed;
+            audioSource.PlayOneShot(pongSound);
+        }
+
+        if (collision.gameObject.name == "WallLeft")
+        {
+            gm.ScoreIncrease(collision.gameObject.name);
+        }
+
+        if(collision.gameObject.name == "WallRight")
+        {
+            gm.ScoreIncrease(collision.gameObject.name);
         }
     }
 }
