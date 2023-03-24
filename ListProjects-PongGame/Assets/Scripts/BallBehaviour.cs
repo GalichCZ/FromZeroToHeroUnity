@@ -11,10 +11,7 @@ public class BallBehaviour : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        if (gm.Started)
-        {
-            GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;
-        }
+        GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;
     }
 
     private float hitFactor(Vector2 ballPos, Vector2 racketPos, float racketHeight)
