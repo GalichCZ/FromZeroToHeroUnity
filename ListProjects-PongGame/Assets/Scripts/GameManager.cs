@@ -5,13 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]ScoreController sc;
+    [SerializeField] BallBehaviour ball;
     private int leftScore;
     private int rightScore;
-    public bool Started;
     
     void Start()
     {
-        Started = false;
         leftScore = 0;
         rightScore = 0;
         Invoke("StartGame", 3f);
@@ -19,8 +18,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        Started = true;
-        Debug.Log("Started");
+        ball.PullBall();
     }
 
     public void ScoreIncrease(string wall)

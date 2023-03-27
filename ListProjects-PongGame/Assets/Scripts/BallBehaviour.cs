@@ -11,7 +11,11 @@ public class BallBehaviour : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;
+    }
+
+    public void PullBall()
+    {
+        ChangeVelocity(Vector2.right * speed);
     }
 
     private float hitFactor(Vector2 ballPos, Vector2 racketPos, float racketHeight)
@@ -23,28 +27,43 @@ public class BallBehaviour : MonoBehaviour
     {
         if(collision.gameObject.name == "LeftRacket")
         {
-            float y = hitFactor(transform.position, collision.transform.position, collision.collider.bounds.size.y);
-            Vector2 dir = new Vector2(-1, y).normalized;
-            GetComponent<Rigidbody2D>().velocity = dir * speed;
-            audioSource.PlayOneShot(pongSound);
+            ChangeDirection(-1, collision);
         }
 
         if(collision.gameObject.name == "RightRacket")
         {
-            float y = hitFactor(transform.position, collision.transform.position, collision.collider.bounds.size.y);
-            Vector2 dir = new Vector2(1, y).normalized;
-            GetComponent<Rigidbody2D>().velocity = dir * speed;
-            audioSource.PlayOneShot(pongSound);
+            ChangeDirection(1, collision);
         }
 
         if (collision.gameObject.name == "WallLeft")
         {
-            gm.ScoreIncrease(collision.gameObject.name);
+            GoalScored(collision.gameObject.name);
         }
 
         if(collision.gameObject.name == "WallRight")
         {
-            gm.ScoreIncrease(collision.gameObject.name);
+            GoalScored(collision.gameObject.name);
         }
+    }
+
+    private void ChangeDirection(int vec, Collision2D collision)
+    {
+        float y = hitFactor(transform.position, collision.transform.position, collision.collider.bounds.size.y);
+        Vector2 dir = new Vector2(vec, y).normalized;
+        ChangeVelocity(dir * speed);
+        audioSource.PlayOneShot(pongSound);
+    }
+
+    private void GoalScored(string net)
+    {
+        transform.position = new Vector2(0,0);
+        ChangeVelocity(Vector2.zero);
+        gm.ScoreIncrease(net);
+        Invoke("PullBall", 1f);
+    }
+
+    private void ChangeVelocity(Vector2 velocity)
+    {
+        GetComponent<Rigidbody2D>().velocity = velocity;
     }
 }
