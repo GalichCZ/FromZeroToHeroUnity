@@ -25,4 +25,5 @@ public class ScoreController : MonoBehaviour
         rightScoreText.text = score.ToString();
     }
 
+    
 }

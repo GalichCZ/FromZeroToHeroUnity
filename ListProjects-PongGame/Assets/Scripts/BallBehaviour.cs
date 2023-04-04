@@ -8,9 +8,28 @@ public class BallBehaviour : MonoBehaviour
     public AudioClip pongSound;
     private AudioSource audioSource;
     public float speed = 30;
+    private Vector2 ballDirection;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+    }
+
+    public void RememberDirection(bool isMenu)
+    {
+        if (isMenu)
+        {
+            ballDirection = transform.position;
+            ChangeVelocity(new Vector2(0, 0));
+        }
+        if (!isMenu)
+        {
+            ChangeVelocity(ballDirection.normalized * speed);
+        }
+        
     }
 
     public void PullBall()
